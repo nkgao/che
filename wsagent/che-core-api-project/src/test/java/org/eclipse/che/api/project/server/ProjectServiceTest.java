@@ -48,6 +48,7 @@ import org.eclipse.che.api.vfs.impl.file.FileWatcherNotificationHandler;
 import org.eclipse.che.api.vfs.impl.file.LocalVirtualFileSystemProvider;
 import org.eclipse.che.api.vfs.impl.file.event.detectors.ProjectTreeChangesDetector;
 import org.eclipse.che.api.vfs.search.impl.FSLuceneSearcherProvider;
+import org.eclipse.che.api.workspace.shared.dto.CreateProjectConfigDto;
 import org.eclipse.che.api.workspace.shared.dto.ProjectConfigDto;
 import org.eclipse.che.api.workspace.shared.dto.SourceStorageDto;
 import org.eclipse.che.api.workspace.shared.dto.WorkspaceConfigDto;
@@ -489,11 +490,88 @@ public class ProjectServiceTest {
         assertNotNull(project.getBaseFolder().getChild("a"));
         assertNotNull(project.getBaseFolder().getChild("b"));
         assertNotNull(project.getBaseFolder().getChild("test.txt"));
-
-
     }
 
-
+//    @Test
+//    public void testCreateBatchProjects() throws Exception {
+//        final String projectType = "testProjectType";
+//        final String projectName = "testProject";
+//        final String projectPath = "/" + projectName;
+//
+//        phRegistry.register(new CreateProjectHandler() {
+//            @Override
+//            public void onCreateProject(Path projectPath, Map<String, AttributeValue> attributes, Map<String, String> options)
+//                    throws ForbiddenException, ConflictException, ServerException {
+//                FolderEntry projectFolder = new FolderEntry(vfsProvider.getVirtualFileSystem().getRoot().createFolder(projectName));
+//                projectFolder.createFolder("a");
+//                projectFolder.createFolder("b");
+//                projectFolder.createFile("test.txt", "test".getBytes(Charset.defaultCharset()));
+//            }
+//
+//            @Override
+//            public String getProjectType() {
+//                return projectType;
+//            }
+//        });
+//
+//        Map<String, List<String>> headers = new HashMap<>();
+//        headers.put("Content-Type", singletonList(APPLICATION_JSON));
+//
+//        ProjectTypeDef pt = new ProjectTypeDef(projectType, "my project type", true, false) {
+//            {
+//                addConstantDefinition("new_project_attribute", "attr description", "to be or not to be");
+//            }
+//        };
+//
+//        ptRegistry.registerProjectType(pt);
+//
+//        Map<String, List<String>> attributeValues = new LinkedHashMap<>();
+//        attributeValues.put("new_project_attribute", singletonList("to be or not to be"));
+//
+//
+//        final CreateProjectConfigDto newProjectConfig = DtoFactory.getInstance().createDto(CreateProjectConfigDto.class)
+//                                                            .withPath(projectPath)
+//                                                            .withName(projectName)
+//                                                            .withDescription("new project")
+//                                                            .withType(projectType)
+//                                                            .withAttributes(attributeValues)
+//                                                            .withSource(DtoFactory.getInstance().createDto(SourceStorageDto.class));
+//        ContainerResponse response = launcher.service(POST,
+//                                                      "http://localhost:8080/api/project/batch",
+//                                                      "http://localhost:8080/api",
+//                                                      headers,
+//                                                      DtoFactory.getInstance().createListDtoFromJson()crecreateListDtoFromJson("", CreateProjectConfigDto.class).getBytes(Charset.defaultCharset()),
+//                                                      null);
+//
+//        assertEquals(response.getStatus(), 200, "Error: " + response.getEntity());
+//        ProjectConfigDto result = (ProjectConfigDto)response.getEntity();
+//        assertNotNull(result);
+//        assertEquals(result.getName(), projectName);
+//        assertEquals(result.getPath(), projectPath);
+//        assertEquals(result.getDescription(), newProjectConfig.getDescription());
+//        assertEquals(result.getType(), newProjectConfig.getType());
+//        assertEquals(result.getType(), projectType);
+//        Map<String, List<String>> attributes = result.getAttributes();
+//        assertNotNull(attributes);
+//        assertEquals(attributes.size(), 1);
+//        assertEquals(attributes.get("new_project_attribute"), singletonList("to be or not to be"));
+//        validateProjectLinks(result);
+//
+//        RegisteredProject project = pm.getProject(projectName);
+//        assertNotNull(project);
+//
+//        //ProjectConfig config = project.getConfig();
+//
+//        assertEquals(project.getDescription(), newProjectConfig.getDescription());
+//        assertEquals(project.getProjectType().getId(), newProjectConfig.getType());
+//        String attributeVal = project.getAttributeEntries().get("new_project_attribute").getString();
+//        assertNotNull(attributeVal);
+//        assertEquals(attributeVal, "to be or not to be");
+//
+//        assertNotNull(project.getBaseFolder().getChild("a"));
+//        assertNotNull(project.getBaseFolder().getChild("b"));
+//        assertNotNull(project.getBaseFolder().getChild("test.txt"));
+//    }
 
     @Test
     public void testUpdateProject() throws Exception {

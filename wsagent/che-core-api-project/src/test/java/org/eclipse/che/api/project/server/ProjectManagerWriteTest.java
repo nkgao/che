@@ -14,6 +14,7 @@ import org.eclipse.che.api.core.ConflictException;
 import org.eclipse.che.api.core.ForbiddenException;
 import org.eclipse.che.api.core.NotFoundException;
 import org.eclipse.che.api.core.ServerException;
+import org.eclipse.che.api.core.model.project.CreateProjectConfig;
 import org.eclipse.che.api.core.model.project.ProjectConfig;
 import org.eclipse.che.api.core.model.project.SourceStorage;
 import org.eclipse.che.api.core.notification.EventSubscriber;
@@ -25,6 +26,7 @@ import org.eclipse.che.api.project.server.type.AttributeValue;
 import org.eclipse.che.api.project.server.type.BaseProjectType;
 import org.eclipse.che.api.project.server.type.Variable;
 import org.eclipse.che.api.vfs.Path;
+import org.eclipse.che.api.workspace.shared.dto.CreateProjectConfigDto;
 import org.eclipse.che.api.workspace.shared.dto.ProjectConfigDto;
 import org.eclipse.che.api.workspace.shared.dto.SourceStorageDto;
 import org.eclipse.che.dto.server.DtoFactory;
@@ -67,6 +69,75 @@ public class ProjectManagerWriteTest extends WsAgentTestBase {
 
         projectHandlerRegistry.register(new SrcGenerator());
 
+    }
+
+    @Test
+    public void testCreateBathProjects() throws Exception {
+        final String projectPath1 = "/testProject1";
+        final String projectPath2 = "/testProject2";
+        final String importType1 = "importType1";
+        final String importType2 = "importType2";
+
+        Map<String, List<String>> attrs = new HashMap<>();
+        List<String> v = new ArrayList<>();
+        v.add("");
+        attrs.put("var1", v);
+
+        SourceStorageDto source1 = DtoFactory.newDto(SourceStorageDto.class).withLocation("someLocation").withType(importType1);
+        CreateProjectConfigDto config1 = createProjectConfigObject("testProject1", projectPath1, source1);
+
+        SourceStorageDto source2 = DtoFactory.newDto(SourceStorageDto.class).withLocation("someLocation").withType(importType2);
+        CreateProjectConfigDto config2 = createProjectConfigObject("testProject2", projectPath2, source2);
+
+        List<CreateProjectConfig> configs = new ArrayList<>(1);
+        configs.add(config1);
+        configs.add(config2);
+
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        ZipOutputStream zipOut = new ZipOutputStream(bout);
+
+        String file1Content = "to be or not to be";
+        zipOut.putNextEntry(new ZipEntry("folder1/"));
+        zipOut.putNextEntry(new ZipEntry("folder1/file1.txt"));
+        zipOut.putNextEntry(new ZipEntry("file1"));
+        zipOut.write(file1Content.getBytes());
+        zipOut.close();
+        InputStream zip = new ByteArrayInputStream(bout.toByteArray());
+
+        registerImporter(importType1, zip);
+
+        String file2Content = "that is the question";
+        zipOut = new ZipOutputStream(bout);
+        zipOut.putNextEntry(new ZipEntry("folder2/"));
+        zipOut.putNextEntry(new ZipEntry("folder2/file1.txt"));
+        zipOut.putNextEntry(new ZipEntry("file2"));
+        zipOut.write(file2Content.getBytes());
+        zipOut.close();
+        zip = new ByteArrayInputStream(bout.toByteArray());
+
+        registerImporter(importType2, zip);
+
+
+        pm.createBatchProjects(configs);
+
+        RegisteredProject project1 = projectRegistry.getProject(projectPath1);
+        RegisteredProject project2 = projectRegistry.getProject(projectPath2);
+
+        assertNotNull(project1);
+        assertNotNull(project2);
+        assertNotNull(project1.getBaseFolder().getChild("file1"));
+        assertEquals(file1Content, project1.getBaseFolder().getChild("file1").getVirtualFile().getContentAsString());
+
+    }
+
+    private CreateProjectConfigDto createProjectConfigObject(String projectName, String projectPath, SourceStorageDto sourceStorage) {
+        return DtoFactory.newDto(CreateProjectConfigDto.class)
+                                                   .withPath(projectPath)
+                                                   .withName(projectName)
+                                                   .withType("projectType")
+                                                   .withDescription("description")
+                                                   .withSource(sourceStorage)
+                                                   .withAttributes(new HashMap<>());
     }
 
 
