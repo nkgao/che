@@ -17,8 +17,9 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import org.eclipse.che.api.core.ServerException;
+import org.eclipse.che.api.core.model.workspace.Environment;
 import org.eclipse.che.api.core.model.workspace.EnvironmentRecipe;
-import org.eclipse.che.api.environment.server.EnvironmentRecipeParser;
+import org.eclipse.che.api.environment.server.TypeSpecificEnvironmentParser;
 import org.eclipse.che.api.environment.server.model.CheServiceBuildContextImpl;
 import org.eclipse.che.api.environment.server.model.CheServiceImpl;
 import org.eclipse.che.api.environment.server.model.CheServicesEnvironmentImpl;
@@ -33,12 +34,12 @@ import static java.lang.String.format;
 
 /**
  * Converters compose file to {@link ComposeEnvironment} and vise versa or
- * converters compose EnvironmentRecipe to {@link CheServicesEnvironmentImpl}.
+ * converters compose {@link Environment} to {@link CheServicesEnvironmentImpl}.
  *
  * @author Alexander Garagatyi
  * @author Alexander Andrienko
  */
-public class ComposeEnvironmentParser implements EnvironmentRecipeParser {
+public class ComposeEnvironmentParser implements TypeSpecificEnvironmentParser {
 
     private static final ObjectMapper YAML_PARSER = new ObjectMapper(new YAMLFactory());
 
@@ -50,17 +51,20 @@ public class ComposeEnvironmentParser implements EnvironmentRecipeParser {
     }
 
     /**
-     * Parses compose file into {@link CheServicesEnvironmentImpl}.
+     * Parses compose file from {@link Environment} into {@link CheServicesEnvironmentImpl}.
      *
-     * @param recipe
-     *         recipe with content to parse. Content contains environment definition.
+     * @param environment
+     *         environment with {@link EnvironmentRecipe} to parse.
+     *         {@link EnvironmentRecipe} contains {@link CheServicesEnvironmentImpl} definition.
      * @throws IllegalArgumentException
      *         when environment or environment recipe is invalid
      * @throws ServerException
      *         when environment recipe can not be retrieved
      */
     @Override
-    public CheServicesEnvironmentImpl parse(EnvironmentRecipe recipe) throws IllegalArgumentException, ServerException {
+    public CheServicesEnvironmentImpl parse(Environment environment) throws IllegalArgumentException,
+                                                                            ServerException {
+        EnvironmentRecipe recipe = environment.getRecipe();
         String content = getContentOfRecipe(recipe);
         ComposeEnvironment composeEnvironment = parse(content, recipe.getContentType());
         return asCheEnvironment(composeEnvironment);
@@ -92,7 +96,8 @@ public class ComposeEnvironmentParser implements EnvironmentRecipeParser {
             default:
                 throw new IllegalArgumentException("Provided environment recipe content type '" +
                                                    contentType +
-                                                   "' is unsupported. Supported values are: application/x-yaml, text/yaml, text/x-yaml");
+                                                   "' is unsupported. Supported values are: " +
+                                                   "application/x-yaml, text/yaml, text/x-yaml");
         }
         return composeEnvironment;
     }

@@ -31,7 +31,7 @@ import static org.testng.Assert.fail;
  * @author Dmytro Nochevnov
  */
 @Listeners(MockitoTestNGListener.class)
-public class EnvironmentContextTest {
+public class CheServiceEnvironmentDeserializerTest {
 
     @InjectMocks
     private ComposeEnvironmentParser parser;

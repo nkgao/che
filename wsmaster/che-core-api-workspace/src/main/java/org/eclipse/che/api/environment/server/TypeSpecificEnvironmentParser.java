@@ -11,27 +11,28 @@
 package org.eclipse.che.api.environment.server;
 
 import org.eclipse.che.api.core.ServerException;
-import org.eclipse.che.api.core.model.workspace.EnvironmentRecipe;
+import org.eclipse.che.api.core.model.workspace.Environment;
 import org.eclipse.che.api.environment.server.model.CheServicesEnvironmentImpl;
 
 /**
  * Parser for creating {@link CheServicesEnvironmentImpl} with parameters
- * parsed from {@link EnvironmentRecipe} content.
+ * defined in the {@link Environment}.
  *
  * @author Alexander Andrienko
  */
-public interface EnvironmentRecipeParser {
+public interface TypeSpecificEnvironmentParser {
     /**
      * Returns {@link CheServicesEnvironmentImpl} with parameters parsed
-     * from {@link EnvironmentRecipe} content.
+     * from {@link Environment}.
      *
-     * @param environmentRecipe
-     *         recipe with environment definition
+     * @param environment
+     *         environment to parsing
      * @throws IllegalArgumentException
-     *         in case invalid argument in the recipe content of the {@link EnvironmentRecipe}
+     *         in case invalid argument in the {@link Environment}
      * @throws ServerException
-     *         when any error occurs
+     *         when parsing fails due to some internal server error or
+     *         inability to parse environment due to other reasons
      */
-    CheServicesEnvironmentImpl parse(EnvironmentRecipe environmentRecipe) throws IllegalArgumentException,
-                                                                                 ServerException;
+    CheServicesEnvironmentImpl parse(Environment environment) throws IllegalArgumentException,
+                                                                     ServerException;
 }

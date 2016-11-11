@@ -13,6 +13,7 @@ package org.eclipse.che.plugin.docker.compose.yaml;
 import com.google.common.collect.ImmutableMap;
 
 import org.eclipse.che.api.core.ServerException;
+import org.eclipse.che.api.core.model.workspace.Environment;
 import org.eclipse.che.api.core.model.workspace.EnvironmentRecipe;
 import org.eclipse.che.api.environment.server.model.CheServiceBuildContextImpl;
 import org.eclipse.che.api.environment.server.model.CheServiceImpl;
@@ -21,6 +22,7 @@ import org.eclipse.che.api.machine.server.util.RecipeDownloader;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.testng.MockitoTestNGListener;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -85,12 +87,19 @@ public class ComposeEnvironmentParserTest {
                                                   "    image: codenvy/ubuntu_jdk8\n";
 
     @Mock
+    private Environment       environment;
+    @Mock
     private EnvironmentRecipe recipe;
     @Mock
     private RecipeDownloader  recipeDownloader;
 
     @InjectMocks
     private ComposeEnvironmentParser parser;
+
+    @BeforeMethod
+    public void setUp() {
+        when(environment.getRecipe()).thenReturn(recipe);
+    }
 
     @Test
     public void shouldBeAbleToParseComposeEnvironmentWithApplicationXYamlContentType() throws Exception {
@@ -100,7 +109,7 @@ public class ComposeEnvironmentParserTest {
         CheServicesEnvironmentImpl expectedEnv = createTestEnv();
 
         //when
-        CheServicesEnvironmentImpl cheServicesEnvironment = parser.parse(recipe);
+        CheServicesEnvironmentImpl cheServicesEnvironment = parser.parse(environment);
 
         //then
         assertEquals(cheServicesEnvironment, expectedEnv);
@@ -114,7 +123,7 @@ public class ComposeEnvironmentParserTest {
         CheServicesEnvironmentImpl expectedEnv = createTestEnv();
 
         //when
-        CheServicesEnvironmentImpl cheServicesEnvironment = parser.parse(recipe);
+        CheServicesEnvironmentImpl cheServicesEnvironment = parser.parse(environment);
 
         //then
         assertEquals(cheServicesEnvironment, expectedEnv);
@@ -128,7 +137,7 @@ public class ComposeEnvironmentParserTest {
         CheServicesEnvironmentImpl expectedEnv = createTestEnv();
 
         //when
-        CheServicesEnvironmentImpl cheServicesEnvironment = parser.parse(recipe);
+        CheServicesEnvironmentImpl cheServicesEnvironment = parser.parse(environment);
 
         //then
         assertEquals(cheServicesEnvironment, expectedEnv);
@@ -143,7 +152,7 @@ public class ComposeEnvironmentParserTest {
         CheServicesEnvironmentImpl expectedEnv = createTestEnv();
 
         //when
-        CheServicesEnvironmentImpl cheServicesEnvironment = parser.parse(recipe);
+        CheServicesEnvironmentImpl cheServicesEnvironment = parser.parse(environment);
 
         //then
         assertEquals(cheServicesEnvironment, expectedEnv);

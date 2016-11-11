@@ -35,7 +35,7 @@ import static org.testng.Assert.assertTrue;
  * @author Alexander Andrienko
  */
 @Listeners(MockitoTestNGListener.class)
-public class ComposeServiceCommandContextTest {
+public class CheServiceCommandDeserializerTest {
 
     @InjectMocks
     private ComposeEnvironmentParser composeEnvironmentParser;

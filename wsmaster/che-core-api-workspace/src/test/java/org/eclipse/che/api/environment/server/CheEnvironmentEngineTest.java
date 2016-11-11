@@ -120,8 +120,6 @@ public class CheEnvironmentEngineTest {
     @Mock
     private Agent                    agent;
     @Mock
-    private EnvironmentRecipeParser  envFileParser;
-    @Mock
     private EnvironmentParser        environmentParser;
 
     private CheEnvironmentEngine engine;
