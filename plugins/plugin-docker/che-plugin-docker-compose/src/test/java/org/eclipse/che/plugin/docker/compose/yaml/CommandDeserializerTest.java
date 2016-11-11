@@ -30,12 +30,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
- * Test deserialization field {@link ComposeServiceImpl#command}.
+ * Test deserialization field {@link ComposeServiceImpl#command}
+ * by {@link org.eclipse.che.plugin.docker.compose.yaml.deserializer.CommandDeserializer}
+ * in the {@link ComposeEnvironmentParser}.
  *
  * @author Alexander Andrienko
  */
 @Listeners(MockitoTestNGListener.class)
-public class CheServiceCommandDeserializerTest {
+public class CommandDeserializerTest {
 
     @InjectMocks
     private ComposeEnvironmentParser composeEnvironmentParser;

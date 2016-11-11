@@ -12,6 +12,7 @@ package org.eclipse.che.plugin.docker.compose.yaml;
 
 import org.eclipse.che.api.core.ServerException;
 import org.eclipse.che.plugin.docker.compose.ComposeEnvironment;
+import org.eclipse.che.plugin.docker.compose.ComposeServiceImpl;
 import org.mockito.InjectMocks;
 import org.mockito.testng.MockitoTestNGListener;
 import org.testng.annotations.Listeners;
@@ -24,6 +25,9 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 
 /**
+ * Test deserialization field {@link ComposeServiceImpl#build}
+ * in the {@link ComposeEnvironmentParser}.
+ *
  * @author Mario Loriedo
  */
 @Listeners(MockitoTestNGListener.class)

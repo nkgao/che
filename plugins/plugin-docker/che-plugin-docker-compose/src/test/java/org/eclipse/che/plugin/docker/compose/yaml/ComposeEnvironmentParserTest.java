@@ -32,6 +32,8 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
+ * Test for {@link ComposeEnvironmentParser}.
+ *
  * @author Alexander Andrienko
  */
 @Listeners(MockitoTestNGListener.class)

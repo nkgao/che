@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableMap;
 
 import org.eclipse.che.api.core.ServerException;
 import org.eclipse.che.plugin.docker.compose.ComposeEnvironment;
+import org.eclipse.che.plugin.docker.compose.ComposeServiceImpl;
 import org.mockito.InjectMocks;
 import org.mockito.testng.MockitoTestNGListener;
 import org.testng.annotations.DataProvider;
@@ -28,10 +29,14 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 /**
+ * Test deserialization field {@link ComposeServiceImpl#environment} by
+ * {@link org.eclipse.che.plugin.docker.compose.yaml.deserializer.EnvironmentDeserializer}
+ * in the {@link ComposeEnvironmentParser}.
+ *
  * @author Dmytro Nochevnov
  */
 @Listeners(MockitoTestNGListener.class)
-public class CheServiceEnvironmentDeserializerTest {
+public class EnvironmentDeserializerTest {
 
     @InjectMocks
     private ComposeEnvironmentParser parser;
