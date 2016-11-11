@@ -32,11 +32,11 @@ public class GitImporterPagePresenter extends AbstractWizardPage<MutableProjectC
     // An alternative scp-like syntax: [user@]host.xz:path/to/repo.git/
     private static final RegExp SCP_LIKE_SYNTAX = RegExp.compile("([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+:");
     // the transport protocol
-    private static final RegExp PROTOCOL        = RegExp.compile("((http|https|git|ssh|ftp|ftps)://)");
+    private static final RegExp PROTOCOL        = RegExp.compile("(http|https|git|ssh|ftp|ftps)://");
     // the address of the remote server between // and /
-    private static final RegExp HOST1           = RegExp.compile("//([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+/");
+    private static final RegExp HOST1           = RegExp.compile("//([A-Za-z0-9]+(\\.|-)?)*[A-Za-z0-9]+/");
     // the address of the remote server between @ and : or /
-    private static final RegExp HOST2           = RegExp.compile("@([A-Za-z0-9_\\-]+\\.[A-Za-z0-9_\\-:]+)+[:/]");
+    private static final RegExp HOST2           = RegExp.compile("@([A-Za-z0-9]+(\\.|-)?)*[A-Za-z0-9]+(/|:)");
     // the repository name
     private static final RegExp REPO_NAME       = RegExp.compile("/[A-Za-z0-9_.\\-]+$");
     // start with white space
@@ -45,7 +45,7 @@ public class GitImporterPagePresenter extends AbstractWizardPage<MutableProjectC
     private GitLocalizationConstant locale;
     private GitImporterPageView     view;
 
-    private boolean                 ignoreChanges;
+    private boolean ignoreChanges;
 
     @Inject
     public GitImporterPagePresenter(GitImporterPageView view,
